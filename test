@@ -1,1 +1,8 @@
-
+select c.hacker_id, h.name, count(c.hacker_id) as challenges_created
+from hackers h
+join challenges c on h.hacker_id=c.hacker_id
+group by c.hacker_id, h.name
+having challenges_created= (select count(c1.challenge_id) from challenges as c1 group by c1.hacker_id order by count(*) DESC limit 1 )
+or
+challenges_created NOT IN (SELECT COUNT(c2.challenge_id) FROM Challenges AS c2 GROUP BY c2.hacker_id HAVING c2.hacker_id <> c.hacker_id)
+ORDER BY challenges_created DESC, c.hacker_id;
